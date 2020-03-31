@@ -43,8 +43,18 @@ module.exports = {
             totalRoll += Math.PI;
         }
 
-        message.reply('Each roll: [' + rolls.join('][') + ']');
-        message.reply('Total roll: ' + totalRoll);
+        if(rollArr[1] == 20 && (rollArr[0] == '' || rollArr[0] == 1) &&
+            rolls[0] == 1) {
+                message.reply('uh oh...');
+        }
+
+        if(rollArr[1] == 20 && (rollArr[0] == '' || rollArr[0] == 1) &&
+            rolls[0] == 20) {
+                message.reply('Dope.');
+            }
+
+        message.channel.send('Each roll: [' + rolls.join('][') + ']');
+        message.channel.send('Total roll: ' + totalRoll);
 
     },
 }

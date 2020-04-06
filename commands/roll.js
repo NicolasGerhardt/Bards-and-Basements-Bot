@@ -43,15 +43,26 @@ module.exports = {
             totalRoll += Math.PI;
         }
 
-        if(rollArr[1] == 20 && (rollArr[0] == '' || rollArr[0] == 1) &&
-            rolls[0] == 1) {
-                message.reply('uh oh...');
+        if(rollArr[1] == 20 && (rollArr[0] == '' || rollArr[0] == 1)) { // rolling single d20
+                let r = Math.floor(Math.random() * Math.floor(3));
+                if (rolls[0] == 1) { // nat 1
+                    if (r == 0) {
+                        message.reply('uh oh...');
+                    } else if (r == 1) {
+                        message.reply('nuts...');
+                    } else if (r == 2) {
+                        message.reply('better luck next time...')
+                    }
+                } else if (rolls[0] == 20) { // nat 20
+                    if (r == 0) {
+                        message.reply('dope');
+                    } else if (r == 1) {
+                        message.reply('what are the odds?')
+                    } else if (r == 2) {
+                        message.reply('go you!')
+                    }
+                }
         }
-
-        if(rollArr[1] == 20 && (rollArr[0] == '' || rollArr[0] == 1) &&
-            rolls[0] == 20) {
-                message.reply('Dope.');
-            }
 
         message.channel.send('Each roll: [' + rolls.join('][') + ']');
         message.channel.send('Total roll: ' + totalRoll);

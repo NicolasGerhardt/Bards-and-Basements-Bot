@@ -4,7 +4,7 @@
   "description": "",
   "main": "bot.js",
   "scripts": {
-    "start": "forever start bot.js >> log.log",
+    "start": "forever start bot.js",
     "dev": "nodemon bot.js",
     "stop" : "forever stopall"
   },

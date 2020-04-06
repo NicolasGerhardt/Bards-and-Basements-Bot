@@ -2,10 +2,10 @@
   "name": "discordbot",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "bot.js",
   "scripts": {
-    "start": "forever start index.js",
-    "dev": "nodemon index.js",
+    "start": "forever start bot.js",
+    "dev": "nodemon bot.js",
     "stop" : "forever stopall"
   },
   "author": "KeyboardSyntax",

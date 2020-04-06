@@ -17,6 +17,7 @@ const Filter = require('bad-words');
 const filter = new Filter();
 
 client.once('ready', () => {
+	console.log(new Date);
 	console.log('Ready!');
 });
 
@@ -38,7 +39,6 @@ client.on('message', message => {
 
 	if (command.args && !args.length) {
 		let reply = `You didn't provide any arguments, ${message.author}!`;
-		console.log('test');
 
 		if (true) {
 			reply += `\n the proper usage would be: \'${prefix}${command.name} ${command.usage}`

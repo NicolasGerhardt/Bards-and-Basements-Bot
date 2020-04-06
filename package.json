@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js"
+    "start": "forever start index.js",
+    "dev": "nodemon index.js",
+    "stop" : "forever stopall"
   },
   "author": "KeyboardSyntax",
   "license": "ISC",

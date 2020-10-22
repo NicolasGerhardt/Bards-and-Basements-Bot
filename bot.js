@@ -1,5 +1,5 @@
 const { prefix } = require("./config.json");
-const { token } = require("./secret.js");
+const { token } = require("./secrets");
 const fs = require("fs");
 const Discord = require("discord.js");
 const client = new Discord.Client();

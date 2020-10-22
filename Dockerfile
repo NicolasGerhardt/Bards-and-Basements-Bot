@@ -3,5 +3,5 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm install
 COPY . .
-EXPOSE 8080
-CMD ["node", "bot.js"]
+EXPOSE 49160
+CMD ["npm", "start"]

@@ -1,71 +1,37 @@
+const rollHelper = require("./roll/rollhelper");
+
 module.exports = {
-    name: 'roll',
-    description: 'Roll dice',
-    args: true,
-    usage: '[number of dice]d[number of sides on dice][+/-][single mondifer] \n--Note: each number must be a 3-digit whole number to work',
-    execute(message, args) {
-        let rollStr = '';
-        if (args.length > 1) {
-            rollStr = args.join('').toLowerCase();
-        } else {
-            rollStr = args[0].toLowerCase();
-        }
-        
-        const regex = new RegExp(/^\d{0,3}d(\d{1,3}|pi)([\+\-](\d{1,3}|pi)){0,1}$/); // RegEx of valid roll string
+  name: "roll",
+  description: "Roll dice",
+  args: true,
+  usage:
+    "Roll dice with standard 'd' notation. You will have to add your mods yourself.  Examples d20, 2d6, 30d4, etc.",
+  execute(message, args) {
+    const rollCommand = rollHelper.mapArgstoRollCommand(args);
 
-        if (!regex.test(rollStr)) {
-            return message.reply(`'${rollStr}' is not a properly formated roll`);
-        }
+    try {
+      rollHelper.validate(rollCommand);
+    } catch (error) {
+      return message.reply(error.message);
+    }
 
-        let rollArr = rollStr.toLowerCase().split(/[d\+\-]/);
+    const dice = rollHelper.buildDice(rollCommand);
 
-        //console.log(rollArr);
+    let rolls = [];
+    let totalRoll = 0;
 
-        let rolls = [];
-        let totalRoll = 0;
+    for (let i = 0; i < dice.quantity; i++) {
+      rolls.push(rollHelper.rollDieWithsides(dice.sides));
+      totalRoll += rolls[i];
+    }
 
-        if (rollArr[0] && rollArr[1] != 'pi') {
-            for (let i = 0; i < rollArr[0]; i++) {
-                rolls.push(Math.floor(Math.random() * Math.floor(rollArr[1])) + 1);
-                totalRoll += rolls[i];
-            }
-        } else if (rollArr[1] == 'pi') {
-            rolls.push((Math.random() * Math.PI) + 1);
-            totalRoll += rolls[0];
-        } else {
-            rolls.push(Math.floor(Math.random() * Math.floor(rollArr[1])) + 1);
-            totalRoll += rolls[0];
-        }
-
-        if(rollArr[2] && rollArr[2] != 'pi') {
-            totalRoll += parseInt(rollArr[2]);
-        } else if (rollArr[2] && rollArr[2] == 'pi') {
-            totalRoll += Math.PI;
-        }
-
-        if(rollArr[1] == 20 && (rollArr[0] == '' || rollArr[0] == 1)) { // rolling single d20
-                let r = Math.floor(Math.random() * Math.floor(3));
-                if (rolls[0] == 1) { // nat 1
-                    if (r == 0) {
-                        message.reply('uh oh...');
-                    } else if (r == 1) {
-                        message.reply('nuts...');
-                    } else if (r == 2) {
-                        message.reply('better luck next time...')
-                    }
-                } else if (rolls[0] == 20) { // nat 20
-                    if (r == 0) {
-                        message.reply('dope');
-                    } else if (r == 1) {
-                        message.reply('what are the odds?')
-                    } else if (r == 2) {
-                        message.reply('go you!')
-                    }
-                }
-        }
-
-        message.channel.send('Each roll: [' + rolls.join('][') + ']');
-        message.channel.send('Total roll: ' + totalRoll);
-
-    },
-}
+    message.channel.send("Each roll: [" + rolls.join("][") + "]");
+    message.channel.send("Total roll: " + totalRoll);
+    
+    if (dice.sides == 20) {
+      rolls.forEach((roll) => {
+        rollHelper.critCheers(message, dice.sides, roll);
+      });
+    }
+  },
+};

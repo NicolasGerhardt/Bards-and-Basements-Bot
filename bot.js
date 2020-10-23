@@ -1,41 +1,68 @@
+//////////////////////////////////// Constants
+
 const { prefix } = require("./config.json");
 const { token } = require("./secrets/token");
+
 const fs = require("fs");
+
 const Discord = require("discord.js");
 const client = new Discord.Client();
 
 client.commands = new Discord.Collection();
 
-const commandFiles = fs
-  .readdirSync("./commands")
-  .filter((file) => file.endsWith(".js"));
-
-for (const file of commandFiles) {
-  const command = require(`./commands/${file}`);
-  client.commands.set(command.name, command);
-}
+BindCommands();
 
 const Filter = require("bad-words");
 const filter = new Filter();
 
-client.once("ready", () => {
-  console.log(new Date());
-  console.log("Ready!");
-});
+//////////////////////////////////// Events
 
-client.on("message", (message) => {
+client.once("ready", Log("Ready!"));
+
+client.on("message", processMessage(message));
+
+//////////////////////////////////// Functions
+
+function BindCommands() {
+  const commandFiles = fs
+    .readdirSync("./commands")
+    .filter((file) => file.endsWith(".js"));
+
+  for (const file of commandFiles) {
+    const command = require(`./commands/${file}`);
+    client.commands.set(command.name, command);
+  }
+}
+
+function Log(message) {
+  console.log(`${new Date()}:${message}`);
+}
+
+function GetMessageCommand(message) {
+  var words = message.content.slice(prefix.length).split(/\s+/).toLowerCase();
+  return {
+    name: words.unshift(),
+    args: words,
+  };
+}
+
+function CheckForBadWords() {
   if (filter.isProfane(message.content)) {
-    message.reply("Language!");
+    message.reply("That's a bad word.");
     return;
   }
+}
+
+function processMessage(message) {
+  CheckForBadWords();
 
   if (!message.content.startsWith(prefix) || message.author.bot) return;
 
-  console.log(message.author.username + ": " + message.content); //log what was said to bot
-  const args = message.content.slice(prefix.length).split(/\s+/);
-  const commandName = args.shift().toLowerCase();
+  Log(`${message.author.username}:${message.content}`);
 
-  if (!client.commands.has(commandName)) return;
+  const messageCommand = GetMessageCommand(message);
+
+  if (!client.commands.has(messageCommand.name)) return;
 
   const command = client.commands.get(commandName);
 
@@ -55,6 +82,8 @@ client.on("message", (message) => {
     console.error(error);
     message.reply("there was an error trying to execute that command!");
   }
-});
+}
+
+//////////////////////////////////// Connect to Discord
 
 client.login(token);

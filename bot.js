@@ -12,14 +12,11 @@ client.commands = new Discord.Collection();
 
 BindCommands();
 
-const Filter = require("bad-words");
-const filter = new Filter();
-
 //////////////////////////////////// Events
 
-client.once("ready", Log("Ready!"));
+client.once("ready", () => { Log("Ready!~") });
 
-client.on("message", processMessage(message));
+client.on("message", (message) => { processMessage(message) });
 
 //////////////////////////////////// Functions
 
@@ -46,16 +43,7 @@ function GetMessageCommand(message) {
   };
 }
 
-function CheckForBadWords() {
-  if (filter.isProfane(message.content)) {
-    message.reply("That's a bad word.");
-    return;
-  }
-}
-
 function processMessage(message) {
-  CheckForBadWords();
-
   if (!message.content.startsWith(prefix) || message.author.bot) return;
 
   Log(`${message.author.username}:${message.content}`);

@@ -36,23 +36,23 @@ function Log(message) {
 }
 
 function GetMessageCommand(message) {
-  var words = message.content.slice(prefix.length).split(/\s+/).toLowerCase();
+  var words = message.content.slice(prefix.length).toLowerCase().split(/\s+/);
   return {
-    name: words.unshift(),
+    name: words.shift(),
     args: words,
   };
 }
 
 function processMessage(message) {
   if (!message.content.startsWith(prefix) || message.author.bot) return;
-
+  
   Log(`${message.author.username}:${message.content}`);
 
   const messageCommand = GetMessageCommand(message);
 
   if (!client.commands.has(messageCommand.name)) return;
 
-  const command = client.commands.get(commandName);
+  const command = client.commands.get(messageCommand.name);
 
   if (command.args && !args.length) {
     let reply = `You didn't provide any arguments, ${message.author}!`;
@@ -65,7 +65,7 @@ function processMessage(message) {
   }
 
   try {
-    command.execute(message, args);
+    command.execute(message, messageCommand.args);
   } catch (error) {
     console.error(error);
     message.reply("there was an error trying to execute that command!");

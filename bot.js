@@ -54,7 +54,7 @@ function processMessage(message) {
 
   const command = client.commands.get(messageCommand.name);
 
-  if (command.args && !args.length) {
+  if (command.args && !messageCommand.args.length) {
     let reply = `You didn't provide any arguments, ${message.author}!`;
 
     if (true) {

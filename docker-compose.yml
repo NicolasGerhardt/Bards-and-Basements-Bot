@@ -1,0 +1,11 @@
+version: '3'
+
+services: 
+  app:
+    container_name: BnBbot
+    restart: always
+    build: .
+    ports: 
+      - '49160:49160'
+    volumes:
+      - './secrets:/usr/src/app/secrets'

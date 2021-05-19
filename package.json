@@ -10,7 +10,6 @@
   "author": "KeyboardSyntax",
   "license": "ISC",
   "dependencies": {
-    "bad-words": "^3.0.3",
     "discord.js": "^12.4.0"
   },
   "devDependencies": {
